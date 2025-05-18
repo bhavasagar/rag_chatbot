@@ -63,7 +63,9 @@ function addMessage(content, sender) {
     const processedContent = sender === 'bot' ? marked.parse(content) : content;
     messageDiv.innerHTML = `
         <div class="message-content">
-            <i class="fas fa-${sender === 'user' ? 'user' : 'robot'} message-icon"></i>
+            <div class="message-icon">
+                <i class="fas fa-${sender === 'user' ? 'user' : 'robot'}"></i>
+            </div>
             <div class="message-text">
                 ${sender === 'bot' ? processedContent : `<p>${content}</p>`}
             </div>

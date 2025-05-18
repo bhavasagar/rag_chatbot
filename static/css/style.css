@@ -18,7 +18,6 @@
 
 .message-content {
     display: flex;
-    max-width: 85%;
 }
 
 .bot-message .message-content {
@@ -36,7 +35,7 @@
     color: white;
     height: 36px;
     width: 36px;
-    display: flex;
+    display: flex !important;
     align-items: center;
     justify-content: center;
     margin-right: 10px;
@@ -53,6 +52,7 @@
     border-radius: 15px;
     padding: 12px 15px;
     position: relative;
+    max-width: 85%;
 }
 
 .user-message .message-text {
