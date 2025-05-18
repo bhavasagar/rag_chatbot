@@ -23,7 +23,7 @@ class RAGRetriever:
     def __init__(self):
         self.vector_store = VectorStore()
         self.llm = ChatAnthropic(
-            model_name="claude-3-haiku-20240307",
+            model_name="claude-3-5-sonnet-20241022",
             api_key=os.environ.get("LLM_API_KEY"),
         )
         base_retriever = self.vector_store.get_retriever({"k": 5})
@@ -33,9 +33,10 @@ class RAGRetriever:
         )
         self.response_prompt = ChatPromptTemplate.from_template(
             """
-            You are a customer support assistant that helps users with their questions.
+            You are a customer support assistant that helps users with their questions. PHRASE THE RESPONSE in a format of 
+            a customer support person is responding to the user query.
             You should only answer based on the provided context. If the answer is not in the context,
-            respond with "I don't know" - never make up an answer.
+            respond with "I don't know" - never make up an answer. DO NOT INCLUDE terms like "Based on the context".
             
             Context information is below:
             ---------------------
