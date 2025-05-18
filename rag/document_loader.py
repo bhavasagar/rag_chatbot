@@ -114,7 +114,7 @@ class DocumentLoader:
 
         return list(set(links))
 
-    def process_all_sources(self, url, max_depth=2, visited=None):
+    def process_all_sources(self, url, max_depth=1, visited=None):
         """Process the main page and all linked sources up to max_depth"""
         if visited is None:
             visited = set()
@@ -126,7 +126,7 @@ class DocumentLoader:
         new_urls_list = []
         chunks = []
 
-        while urls_list and max_depth > 0:
+        while urls_list and max_depth >= 0:
             url = urls_list.pop()
             if url in visited:
                 continue
