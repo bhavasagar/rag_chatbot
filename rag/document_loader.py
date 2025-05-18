@@ -3,13 +3,16 @@ import glob
 import logging
 from typing import List
 
+from bs4 import BeautifulSoup
 from langchain_community.document_loaders import (
     TextLoader,
     PDFMinerLoader,
     UnstructuredMarkdownLoader,
 )
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.document_loaders import WebBaseLoader
 from langchain_core.documents import Document
+import requests
 
 from .embeddings import get_embedding_model
 from .vector_store import VectorStore
@@ -80,11 +83,71 @@ class DocumentLoader:
             logger.warning("No documents found to process")
             return
 
-        chunks = self.split_documents(documents)
+        chunks = self.split_documents(documents) + self.process_all_sources(self.url)
         logger.info(f"Split documents into {len(chunks)} chunks")
 
         self.vector_store.add_documents(chunks)
         logger.info("Documents processed and stored in vector database")
+
+    def extract_content(self, url):
+        """Extract all text content from the web page"""
+        loader = WebBaseLoader(url)
+        documents = loader.load()
+        return documents
+
+    def extract_sources(self, url):
+        """Extract all links/sources from the web page"""
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        links = []
+        for a_tag in soup.find_all("a", href=True):
+            href = a_tag["href"]
+            if href.startswith("/"):
+                base_url = "/".join(url.split("/")[:3])
+                href = base_url + href
+            elif not href.startswith(("http://", "https://")):
+                href = url + ("/" if not url.endswith("/") else "") + href
+
+            if href.startswith(("http://", "https://")):
+                links.append(href)
+
+        return list(set(links))
+
+    def process_all_sources(self, url, max_depth=2, visited=None):
+        """Process the main page and all linked sources up to max_depth"""
+        if visited is None:
+            visited = set()
+
+        if max_depth < 0 or url in visited:
+            return []
+
+        urls_list = [url]
+        new_urls_list = []
+        chunks = []
+
+        while urls_list and max_depth > 0:
+            url = urls_list.pop()
+            if url in visited:
+                continue
+
+            visited.add(url)
+            logger.info(f"Processing URL: {url}")
+            try:
+                documents = self.extract_content(url)
+                chunks += self.split_documents(documents)
+                if max_depth > 0:
+                    sources = self.extract_sources(url)
+                    new_urls_list += sources
+            except:
+                continue
+
+            if len(urls_list) == 0:
+                urls_list = new_urls_list
+                new_urls_list = []
+                max_depth -= 1
+
+        return chunks
 
 
 def main():
