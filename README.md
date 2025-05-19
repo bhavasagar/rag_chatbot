@@ -1,6 +1,6 @@
 # Customer Support RAG Chatbot
 
-A Retrieval-Augmented Generation (RAG) chatbot built to assist users with customer support queries. This chatbot only answers questions based on provided knowledge base documents, responding with "I don't know" when a question is outside its scope as stated.
+A Retrieval-Augmented Generation (RAG) chatbot built to assist users with customer support queries. This chatbot only answers questions based on provided knowledge base documents and content from the https://www.angelone.in/support, responding with "I don't know" when a question is outside its scope as stated.
 
 ## Features
 
