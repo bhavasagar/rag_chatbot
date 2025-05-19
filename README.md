@@ -61,6 +61,7 @@ Access the live demo here: [RAG Chatbot Demo]()
 Place your customer support documentation in the `data/documents` directory. The system supports:
 - PDF files (`.pdf`)
 - Document files (`.docx`)
+- Website Links
 
 ### Building the Document Index
 
