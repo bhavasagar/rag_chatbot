@@ -10,10 +10,6 @@ A Retrieval-Augmented Generation (RAG) chatbot built to assist users with custom
 - 🛑 **Knowledge Boundaries**: Responds with "I don't know" for questions outside its knowledge base
 - 🖥️ **User-friendly Interface**: Clean, responsive web interface for interactions
 
-## Live Demo
-
-Access the live demo here: [RAG Chatbot Demo]()
-
 ## Technologies Used
 
 - **Backend**: Flask
